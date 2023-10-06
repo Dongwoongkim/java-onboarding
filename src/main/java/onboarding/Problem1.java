@@ -2,6 +2,7 @@ package onboarding;
 
 import javax.imageio.stream.ImageInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -20,28 +21,16 @@ class Problem1 {
             return -1;
         }
 
-        int pobiScore = getScore(pobi);
-        int crongScore = getScore(crong);
-        answer = getResult(pobiScore, crongScore);
+        answer = getResult(getScore(pobi), getScore(crong));
         return answer;
     }
 
-    private static int getScore(List<Integer> person) {
-        int[] leftNum = Stream.of(String.valueOf(person.get(0)).split("")).mapToInt(Integer::parseInt).toArray();
-        int[] rightNum = Stream.of(String.valueOf(person.get(1)).split("")).mapToInt(Integer::parseInt).toArray();
+    private static boolean validate(List<Integer> person) {
+        int left = person.get(0);
+        int right = person.get(1);
 
-        return Math.max(getMaxScore(leftNum), getMaxScore(rightNum));
-    }
-
-    private static int getMaxScore(int[] numbers) {
-        int sum = 0;
-        int sum1 = 1;
-
-        for (int number : numbers) {
-            sum += number;
-            sum1 *= number;
-        }
-        return Math.max(sum, sum1);
+        return (validateRange(left) && validateRange(right))
+                && validateOneDifference(left, right) && validateOddLeftEvenRight(left, right);
     }
 
     private static int getResult(int pobiScore, int crongScore) {
@@ -53,18 +42,31 @@ class Problem1 {
         return 0;
     }
 
-    /**
-     * 입력 값 검증 기능
-     * 1. validateRange(value) : 범위(1~400) 안에 있는 지 검사
-     * 2. validateOneDifference(left, right) : 왼쪽과 오른쪽 값의 차가 1인지 검사
-     * 3. validateOddLeftEvenRight(left, right) : 왼쪽값이 홀수, 오른쪽값이 짝수인지 검사
-     */
-    private static boolean validate(List<Integer> person) {
-        int left = person.get(0);
-        int right = person.get(1);
+    private static int getScore(List<Integer> person) {
+        int[] leftNum = Stream.of(String.valueOf(person.get(0)).split("")).mapToInt(Integer::parseInt).toArray();
+        int[] rightNum = Stream.of(String.valueOf(person.get(1)).split("")).mapToInt(Integer::parseInt).toArray();
 
-        return (validateRange(left) && validateRange(right))
-                && validateOneDifference(left, right) && validateOddLeftEvenRight(left, right);
+        return Math.max(getMaxScore(leftNum), getMaxScore(rightNum));
+    }
+
+    private static int getMaxScore(int[] numbers) {
+        return Math.max(getSumOfEachNumber(numbers),getMultipleOfEachNumber(numbers));
+    }
+
+    private static int getSumOfEachNumber(int[] numbers) {
+        int sum = 0;
+        for (int number : numbers) {
+            sum += number;
+        }
+        return sum;
+    }
+
+    private static int getMultipleOfEachNumber(int[] numbers) {
+        int mul = 1;
+        for (int number : numbers) {
+            mul *= number;
+        }
+        return mul;
     }
 
     private static boolean validateRange(int page) {
@@ -73,6 +75,7 @@ class Problem1 {
         }
         return false;
     }
+
     private static boolean validateOneDifference(int left, int right) {
         if (right - left == 1) {
             return true;
