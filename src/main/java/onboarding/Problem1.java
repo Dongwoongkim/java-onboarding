@@ -15,9 +15,11 @@ class Problem1 {
 
     public static int solution(List<Integer> pobi, List<Integer> crong) {
         int answer = Integer.MAX_VALUE;
+
         if (!(validate(pobi) && validate(crong))) {
             return -1;
         }
+
         int pobiScore = getScore(pobi);
         int crongScore = getScore(crong);
         answer = getResult(pobiScore, crongScore);
@@ -65,11 +67,12 @@ class Problem1 {
                 && validateOneDifference(left, right) && validateOddLeftEvenRight(left, right);
     }
 
-    private static boolean validateOddLeftEvenRight(int left, int right) {
-        if(left % 2 == 1 && right % 2 == 0) return true;
+    private static boolean validateRange(int page) {
+        if (1 <= page && page <= 400) {
+            return true;
+        }
         return false;
     }
-
     private static boolean validateOneDifference(int left, int right) {
         if (right - left == 1) {
             return true;
@@ -77,10 +80,8 @@ class Problem1 {
         return false;
     }
 
-    private static boolean validateRange(int page) {
-        if (1 <= page && page <= 400) {
-            return true;
-        }
+    private static boolean validateOddLeftEvenRight(int left, int right) {
+        if(left % 2 == 1 && right % 2 == 0) return true;
         return false;
     }
 }
